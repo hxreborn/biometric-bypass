@@ -3,14 +3,15 @@ name: Android CI
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -18,18 +19,11 @@ jobs:
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
-        distribution: 'zulu'
+        distribution: 'adopt'
         java-version: '11'
 
-    - name: Cache Gradle packages
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
     - name: Build with Gradle
       run: ./gradlew assembleRelease
@@ -37,24 +31,26 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v2
       with:
-        name: APK
+        name: BiometricBypass-APK
         path: app/build/outputs/apk/release/*.apk
 
-    - name: Create Release
+    - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: v${{ github.sha }}
+        release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
 
     - name: Upload APK to Release
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: app/build/outputs/apk/release/*.apk
-        asset_name: BiometricBypass-${{ github.run_number }}.apk
-        asset_content_type: application/zip
+        asset_name: BiometricBypass-Release-${{ github.sha }}.apk
+        asset_content_type: application/vnd.android.package-archive
