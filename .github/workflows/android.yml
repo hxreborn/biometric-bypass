@@ -1,6 +1,10 @@
 name: Android CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -19,5 +23,53 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Update Version in gradle.properties
+      run: |
+        APP_VER_NAME=$(date -u '+%y.%m.%d')
+        APP_VER_CODE=$(date -u '+%y%m%d')
+        echo "appVerName=${APP_VER_NAME}" > gradle.properties
+        echo "appVerCode=${APP_VER_CODE}" >> gradle.properties
+        git add gradle.properties
+        git commit -m "Update version to ${APP_VER_NAME}"
+        git push origin master
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
+      with:
+        arguments: build
+
+    - name: Generate Tag
+      id: tag_step
+      run: |
+        TAG="v$(date -u '+%Y%m%d')"
+        echo "Generated Tag: $TAG"
+        echo "::set-output name=TAG::$TAG"
+
+    - name: Push Tag
+      run: |
+        git tag ${{ steps.tag_step.outputs.TAG }}
+        git push origin ${{ steps.tag_step.outputs.TAG }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag_step.outputs.TAG }}
+        release_name: Release ${{ steps.tag_step.outputs.TAG }}
+        body: "Automatically generated release from workflow"
+        draft: false
+        prerelease: false
+
+    - name: Upload APK to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: app/build/outputs/apk/release/app-release.apk
+        asset_name: biometricbypass-${{ steps.tag_step.outputs.TAG }}.apk
+        asset_content_type: application/vnd.android.package-archive
