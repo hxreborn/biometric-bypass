@@ -1,0 +1,91 @@
+# Gradle files
+.gradle/
+/build/
+
+# Android Studio
+.idea/
+/*.iml
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+.DS_Store
+*.log
+
+# NDK/CMake
+.cxx/
+.externalNativeBuild/
+
+# Output and generated files
+/captures/
+/outputs/
+
+# Unit test files
+/test-output/
+
+# JetBrains related
+/.idea/
+/*.iws
+/*.ipr
+/*.iml
+
+# Android Studio specific
+/.gradle/
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/modules.xml
+/.idea/.name
+/.idea/codeStyles/Project.xml
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/assetWizardSettings.xml
+/.idea/jsLibraryMappings.xml
+/gradle/wrapper/gradle-wrapper.properties
+/.gradle/
+/build/
+/captures/
+/externalNativeBuild/
+*.iml
+
+# Android Studio 3.1+ specific
+.idea/caches/
+/.idea/modules.xml
+.idea/workspace.xml
+.idea/codeStyles/Project.xml
+.idea/libraries/
+/.idea/shelf/
+/.idea/workspace.xml
+.idea/navEditor.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/sonarlint/
+/.idea/vcs.xml
+.idea/runConfigurations.xml
+.idea/runConfigurations/
+/.idea/jsLibraryMappings.xml
+
+# Keystore files
+*.jks
+
+# Google Services (update this if you have a google-services.json file)
+/google-services.json
+
+# Firebase Crashlytics
+/crashlytics.properties
+
+# Gradle Wrapper
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Build folders
+/build/
+/app/build/
+/gradle/
+
+# MacOS specific files
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp

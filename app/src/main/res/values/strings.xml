@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Biometric Bypass</string>
+    <string name="app_desc">Bypasses biometric confirmation after successful face unlock in SystemUI.</string>
+</resources>

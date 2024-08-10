@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "es.rafagale.biometricbypass"
+        minSdk 34
+        targetSdk 34
+        versionCode appVerCode.toInteger()
+        versionName appVerName
+    }
+
+    applicationVariants.all { variant ->
+        variant.resValue "string", "app_version", variant.versionName
+        variant.outputs.all { output ->
+            if (variant.buildType.name == 'release') {
+                outputFileName = "biometricbypass${defaultConfig.versionName}.apk"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    compileOnly 'de.robv.android.xposed:api:82'
+}
