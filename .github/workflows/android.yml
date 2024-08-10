@@ -27,14 +27,13 @@ jobs:
           APP_VER_NAME=$(date -u '+%y.%m.%d')
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          echo "appVerName=$APP_VER_NAME" > gradle.properties
           git add gradle.properties
-          git diff-index --quiet HEAD || {
-            git commit -m "Update version to $APP_VER_NAME"
-            git tag -a "$APP_VER_NAME" -m "Version $APP_VER_NAME"
-            git push origin master --tags
-          }
+          git commit -m "Update version to $APP_VER_NAME"
+          git tag -a "$APP_VER_NAME" -m "Version $APP_VER_NAME"
+          git push origin master --tags
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
