@@ -23,6 +23,11 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Configure Git User
+      run: |
+        git config --global user.name "Your Name"
+        git config --global user.email "you@example.com"
+
     - name: Update Version in gradle.properties
       run: |
         APP_VER_NAME=$(date -u '+%y.%m.%d')
