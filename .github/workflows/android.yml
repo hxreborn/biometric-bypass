@@ -45,4 +45,4 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
