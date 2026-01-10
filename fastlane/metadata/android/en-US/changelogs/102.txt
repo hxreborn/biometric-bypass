@@ -1,3 +1,5 @@
+NOTE: New signing key - uninstall previous version before updating.
+
 - Target Android 16 (SDK 36)
 - Update AGP to 8.11.0 and Kotlin to 2.1.21
 - Add CI/CD release pipeline
