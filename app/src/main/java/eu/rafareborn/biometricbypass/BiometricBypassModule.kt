@@ -9,8 +9,10 @@ import io.github.libxposed.api.XposedModuleInterface.PackageLoadedParam
 
 internal lateinit var module: BiometricBypassModule
 
-class BiometricBypassModule(base: XposedInterface, param: ModuleLoadedParam) : XposedModule(base, param) {
-
+class BiometricBypassModule(
+    base: XposedInterface,
+    param: ModuleLoadedParam,
+) : XposedModule(base, param) {
     init {
         module = this
     }

@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 @XposedHooker
 class BiometricBypassHooker : XposedInterface.Hooker {
-
     companion object {
         private const val MAX_RETRIES = 3
         private const val INITIAL_DELAY_MS = 100L
@@ -28,18 +27,22 @@ class BiometricBypassHooker : XposedInterface.Hooker {
             val context = authContainerView.context ?: return
 
             @SuppressLint("DiscouragedApi")
-            val confirmButtonId = context.resources.getIdentifier(
-                BiometricBypassModule.BUTTON_CONFIRM_ID,
-                "id",
-                context.packageName
-            )
+            val confirmButtonId =
+                context.resources.getIdentifier(
+                    BiometricBypassModule.BUTTON_CONFIRM_ID,
+                    "id",
+                    context.packageName,
+                )
 
             CoroutineScope(Dispatchers.Main).launch {
                 retryClickButton(authContainerView, confirmButtonId)
             }
         }
 
-        private suspend fun retryClickButton(parentView: View, buttonId: Int) {
+        private suspend fun retryClickButton(
+            parentView: View,
+            buttonId: Int,
+        ) {
             var delayTime = INITIAL_DELAY_MS
 
             repeat(MAX_RETRIES) { attempt ->
