@@ -1,25 +1,27 @@
 plugins {
     alias(libs.plugins.agp.app)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.ktlint)
 }
 
 android {
     namespace = "eu.rafareborn.biometricbypass"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "eu.rafareborn.biometricbypass"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
 
-        versionCode = 101
-        versionName = "1.0.1"
+        versionCode = 102
+        versionName = "1.0.2"
     }
 
     signingConfigs {
         create("release") {
             fun secret(name: String): String? =
-                providers.gradleProperty(name)
+                providers
+                    .gradleProperty(name)
                     .orElse(providers.environmentVariable(name))
                     .orNull
 
@@ -50,7 +52,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release").takeIf { it.storeFile != null }
         }
@@ -82,16 +84,17 @@ android {
     packaging {
         resources {
             merges += "META-INF/xposed/*"
-            excludes += setOf(
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt",
-                "META-INF/AL2.0",
-                "META-INF/LGPL2.1",
-                "META-INF/*.kotlin_module",
-                "META-INF/INDEX.LIST"
-            )
+            excludes +=
+                setOf(
+                    "META-INF/LICENSE",
+                    "META-INF/LICENSE.txt",
+                    "META-INF/NOTICE",
+                    "META-INF/NOTICE.txt",
+                    "META-INF/AL2.0",
+                    "META-INF/LGPL2.1",
+                    "META-INF/*.kotlin_module",
+                    "META-INF/INDEX.LIST",
+                )
         }
     }
 
@@ -99,6 +102,12 @@ android {
         abortOnError = true
         disable.add("OldTargetApi")
     }
+}
+
+ktlint {
+    version.set("1.8.0")
+    android.set(true)
+    ignoreFailures.set(false)
 }
 
 dependencies {
