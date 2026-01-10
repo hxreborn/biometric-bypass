@@ -1,12 +1,14 @@
 [versions]
-agp = "8.5.2"
-kotlin = "2.0.0"
+agp = "8.11.0"
+kotlin = "2.1.21"
+ktlint = "14.0.1"
 xposed = "100"
 xposed-service = "100-1.0.0"
 
 [plugins]
 agp-app = { id = "com.android.application", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 [libraries]
 libxposed-api = { group = "io.github.libxposed", name = "api", version.ref = "xposed" }
