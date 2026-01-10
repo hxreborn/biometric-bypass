@@ -7,6 +7,11 @@
 ![GitHub downloads](https://img.shields.io/github/downloads/hxreborn/biometric-bypass/total)
 ![GitHub Release (latest by date)](https://img.shields.io/github/v/release/hxreborn/biometric-bypass)
 
+<p>
+  <a href="https://apt.izzysoft.de/packages/eu.rafareborn.biometricbypass"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80" alt="Get it on IzzyOnDroid" /></a>
+  <a href="../../releases"><img src=".github/assets/badge_github.png" height="82" alt="Get it on GitHub" /></a>
+</p>
+
 ## Overview
 
 This LSPosed module streamlines face unlock by skipping the confirmation step enforced after biometric authentication. It applies the bypass system-wide — so it works across **all apps**, including banking or security-sensitive ones.
