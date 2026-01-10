@@ -32,7 +32,7 @@ tasks.register("printVersionInfo") {
     }
 }
 
-tasks.register<Exec>("buildLibxposed") {
+tasks.register<Exec>("buildLibxposedApi") {
     group = "libxposed"
     description = "Builds libxposed/api and publishes to mavenLocal"
     workingDir = layout.projectDirectory.dir("libxposed/api").asFile
@@ -43,4 +43,21 @@ tasks.register<Exec>("buildLibxposed") {
         ":checks:compileKotlin",
         "--no-daemon",
     )
+}
+
+tasks.register<Exec>("buildLibxposedService") {
+    group = "libxposed"
+    description = "Builds libxposed/service and publishes to mavenLocal"
+    workingDir = layout.projectDirectory.dir("libxposed/service").asFile
+    commandLine(
+        "./gradlew",
+        ":service:publishServicePublicationToMavenLocal",
+        "--no-daemon",
+    )
+}
+
+tasks.register("buildLibxposed") {
+    group = "libxposed"
+    description = "Builds all libxposed modules and publishes to mavenLocal"
+    dependsOn("buildLibxposedApi", "buildLibxposedService")
 }
