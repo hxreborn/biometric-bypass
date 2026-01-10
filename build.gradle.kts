@@ -51,6 +51,7 @@ tasks.register<Exec>("buildLibxposedService") {
     workingDir = layout.projectDirectory.dir("libxposed/service").asFile
     commandLine(
         "./gradlew",
+        ":interface:publishInterfacePublicationToMavenLocal",
         ":service:publishServicePublicationToMavenLocal",
         "--no-daemon",
     )
