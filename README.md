@@ -8,8 +8,10 @@
 ![GitHub Release (latest by date)](https://img.shields.io/github/v/release/hxreborn/biometric-bypass)
 
 <p>
-  <a href="https://apt.izzysoft.de/packages/eu.rafareborn.biometricbypass"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80" alt="Get it on IzzyOnDroid" /></a>
-  <a href="../../releases"><img src=".github/assets/badge_github.png" height="82" alt="Get it on GitHub" /></a>
+  <a href="https://f-droid.org/packages/eu.rafareborn.biometricbypass"><img src=".github/assets/badge_fdroid.png" height="80" alt="Get it on F-Droid" /></a>
+  <a href="https://apt.izzysoft.de/packages/eu.rafareborn.biometricbypass"><img src=".github/assets/badge_izzyondroid.png" height="80" alt="Get it on IzzyOnDroid" /></a>
+  <a href="../../releases"><img src=".github/assets/badge_github.png" height="80" alt="Get it on GitHub" /></a>
+  <a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22eu.rafareborn.biometricbypass%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fhxreborn%2Fbiometric-bypass%22%2C%22author%22%3A%22rafareborn%22%2C%22name%22%3A%22Biometric%20Bypass%22%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%7D%22%7D"><img src=".github/assets/badge_obtainium.png" height="80" alt="Get it on Obtainium" /></a>
 </p>
 
 ## Overview
