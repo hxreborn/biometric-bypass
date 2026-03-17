@@ -4,7 +4,8 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dfcf1c46fa474099a3aef3f5b3dfe8c3)](https://app.codacy.com/gh/hxreborn/biometric-bypass)
 ![GitHub stars](https://img.shields.io/github/stars/hxreborn/biometric-bypass?style=social)
-![GitHub downloads](https://img.shields.io/github/downloads/hxreborn/biometric-bypass/total)
+![GitHub downloads](https://img.shields.io/github/downloads/hxreborn/biometric-bypass/total?label=GitHub%20downloads)
+![Xposed repo downloads](https://img.shields.io/github/downloads/Xposed-Modules-Repo/eu.rafareborn.biometricbypass/total?label=Xposed%20repo%20downloads)
 ![GitHub Release (latest by date)](https://img.shields.io/github/v/release/hxreborn/biometric-bypass)
 
 <p>
@@ -60,7 +61,7 @@ This module hooks System UI directly to eliminate that dialog, simulating the in
 
 ## Installation
 
-1. Install [LSPosed](https://github.com/LSPosed/LSPosed/releases)
+1. Install [LSPosed](https://github.com/LSPosed/LSPosed) with API 101 support (may not be publicly available yet)
 2. Download and install the module APK
 3. In LSPosed, enable the module and apply it to **System UI**
 4. Restart System UI or reboot the device

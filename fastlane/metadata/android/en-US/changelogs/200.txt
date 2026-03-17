@@ -1,0 +1,4 @@
+Migrate to libxposed API 101. Requires an LSPosed Manager with API 101 support.
+
+- Upgrade to Gradle 9.4, AGP 9.1.0, Kotlin 2.3.10
+- Update coroutines to 1.10.2
