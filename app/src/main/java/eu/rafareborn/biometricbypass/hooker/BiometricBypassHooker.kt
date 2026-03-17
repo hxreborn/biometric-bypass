@@ -1,63 +1,94 @@
 package eu.rafareborn.biometricbypass.hooker
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.View
 import android.widget.Button
-import eu.rafareborn.biometricbypass.BiometricBypassModule
 import eu.rafareborn.biometricbypass.BiometricBypassModule.Companion.TAG
-import eu.rafareborn.biometricbypass.module
-import io.github.libxposed.api.XposedInterface
-import io.github.libxposed.api.annotations.AfterInvocation
-import io.github.libxposed.api.annotations.XposedHooker
+import io.github.libxposed.api.XposedModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@XposedHooker
-class BiometricBypassHooker : XposedInterface.Hooker {
-    companion object {
-        private const val MAX_RETRIES = 3
-        private const val INITIAL_DELAY_MS = 100L
+object BiometricBypassHooker {
+    private const val TARGET_CLASS = "com.android.systemui.biometrics.AuthContainerView"
+    private const val TARGET_METHOD = "onDialogAnimatedIn"
+    private const val BUTTON_CONFIRM_ID = "button_confirm"
+    private const val MAX_RETRIES = 3
+    private const val INITIAL_DELAY_MS = 100L
 
-        @JvmStatic
-        @AfterInvocation
-        fun afterInvocation(callback: XposedInterface.AfterHookCallback) {
-            val authContainerView = callback.thisObject as? View ?: return
-            val context = authContainerView.context ?: return
+    private lateinit var module: XposedModule
+
+    @SuppressLint("PrivateApi")
+    fun hook(
+        module: XposedModule,
+        classLoader: ClassLoader,
+    ) {
+        this.module = module
+        val targetClass = classLoader.loadClass(TARGET_CLASS)
+        val targetMethod = targetClass.getDeclaredMethod(TARGET_METHOD)
+
+        module.hook(targetMethod).intercept { chain ->
+            chain.proceed()
+
+            val authContainerView = chain.thisObject as? View ?: return@intercept null
+            val context = authContainerView.context
 
             @SuppressLint("DiscouragedApi")
             val confirmButtonId =
-                context.resources.getIdentifier(
-                    BiometricBypassModule.BUTTON_CONFIRM_ID,
-                    "id",
-                    context.packageName,
-                )
+                context.resources.getIdentifier(BUTTON_CONFIRM_ID, "id", context.packageName)
+            val opPackageName = getOpPackageName(authContainerView)
 
             CoroutineScope(Dispatchers.Main).launch {
-                retryClickButton(authContainerView, confirmButtonId)
+                retryClickButton(authContainerView, confirmButtonId, opPackageName)
             }
         }
 
-        private suspend fun retryClickButton(
-            parentView: View,
-            buttonId: Int,
-        ) {
-            var delayTime = INITIAL_DELAY_MS
+        module.log(Log.INFO, TAG, "Hooked $TARGET_METHOD in $TARGET_CLASS")
+    }
 
-            repeat(MAX_RETRIES) { attempt ->
-                parentView.findViewById<Button?>(buttonId)?.takeIf { it.isShown }?.let {
-                    it.performClick()
-                    module.log("$TAG Confirm button clicked successfully.")
-                    return
-                }
+    private fun getOpPackageName(authContainerView: View): String {
+        val result =
+            runCatching {
+                val config =
+                    authContainerView.javaClass
+                        .getDeclaredField("mConfig")
+                        .apply { isAccessible = true }
+                        .get(authContainerView) ?: return@runCatching null
 
-                module.log("$TAG Retry #${attempt + 1}: Button not visible. Waiting ${delayTime}ms...")
-                delay(delayTime)
-                delayTime *= 2
+                config.javaClass
+                    .getDeclaredField("mOpPackageName")
+                    .apply { isAccessible = true }
+                    .get(config) as? String
             }
 
-            module.log("$TAG Confirm button not found after $MAX_RETRIES retries.")
+        result.exceptionOrNull()?.let {
+            module.log(Log.WARN, TAG, "Reflection: ${it.javaClass.simpleName}")
         }
+
+        return result.getOrNull() ?: "unknown"
+    }
+
+    private suspend fun retryClickButton(
+        parentView: View,
+        buttonId: Int,
+        opPackageName: String,
+    ) {
+        var delayTime = INITIAL_DELAY_MS
+
+        repeat(MAX_RETRIES) { attempt ->
+            parentView.findViewById<Button?>(buttonId)?.takeIf { it.isShown }?.let {
+                it.performClick()
+                module.log(Log.INFO, TAG, "Confirm clicked [$opPackageName]")
+                return
+            }
+
+            module.log(Log.INFO, TAG, "Retry ${attempt + 1} [$opPackageName] ${delayTime}ms")
+            delay(delayTime)
+            delayTime *= 2
+        }
+
+        module.log(Log.WARN, TAG, "Button not found [$opPackageName] after $MAX_RETRIES retries")
     }
 }

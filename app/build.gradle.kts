@@ -1,20 +1,25 @@
 plugins {
     alias(libs.plugins.agp.app)
-    alias(libs.plugins.kotlin)
     alias(libs.plugins.ktlint)
 }
 
 android {
     namespace = "eu.rafareborn.biometricbypass"
     compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "eu.rafareborn.biometricbypass"
         minSdk = 29
         targetSdk = 36
 
-        versionCode = 102
-        versionName = "1.0.2"
+        versionCode = 200
+        versionName = "2.0.0"
+    }
+
+    androidResources {
+        @Suppress("UnstableApiUsage")
+        localeFilters.add("en")
     }
 
     signingConfigs {
@@ -62,18 +67,13 @@ android {
         }
     }
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
     buildFeatures {
-        viewBinding = true
         buildConfig = true
     }
 
-    kotlin {
-        jvmToolchain(21)
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     compileOptions {
@@ -94,20 +94,48 @@ android {
                     "META-INF/LGPL2.1",
                     "META-INF/*.kotlin_module",
                     "META-INF/INDEX.LIST",
+                    "DebugProbesKt.bin",
+                    "kotlin-tooling-metadata.json",
+                    "kotlin/**",
+                    "META-INF/kotlinx_coroutines_*.version",
+                    "META-INF/services/*",
+                    "META-INF/com/android/build/gradle/*",
+                    "META-INF/version-control-info.textproto",
                 )
         }
     }
 
     lint {
         abortOnError = true
-        disable.add("OldTargetApi")
+        checkReleaseBuilds = false
+        disable.addAll(listOf("OldTargetApi", "PrivateApi", "DiscouragedPrivateApi"))
+        ignoreTestSources = true
     }
 }
+
+kotlin { jvmToolchain(21) }
 
 ktlint {
     version.set("1.8.0")
     android.set(true)
     ignoreFailures.set(false)
+}
+
+// AGP 9 built-in Kotlin doesn't register source sets that the ktlint plugin can discover.
+// Run ktlint 1.8.0 directly on source files as a workaround.
+val ktlintSrc by tasks.registering(JavaExec::class) {
+    group = "verification"
+    description = "Runs ktlint 1.8.0 on Kotlin source files"
+    mainClass.set("com.pinterest.ktlint.Main")
+    classpath =
+        configurations.detachedConfiguration(
+            dependencies.create("com.pinterest.ktlint:ktlint-cli:1.8.0"),
+        )
+    args("src/**/*.kt")
+}
+
+tasks.named("check").configure {
+    dependsOn(ktlintSrc)
 }
 
 dependencies {
