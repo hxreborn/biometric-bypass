@@ -2,18 +2,10 @@
 -adaptresourcefilecontents META-INF/xposed/java_init.list
 -keepattributes RuntimeVisibleAnnotations
 -keep,allowobfuscation,allowoptimization public class * extends io.github.libxposed.api.XposedModule {
-    public <init>(...);
+    public <init>();
     public void onPackageLoaded(...);
-    public void onSystemServerLoaded(...);
-}
--keep,allowoptimization,allowobfuscation @io.github.libxposed.api.annotations.* class * {
-    <fields>;
-    <methods>;
-}
-
-# Reflection-Based Keep Rules
--keepclassmembers class * {
-    @io.github.libxposed.api.annotations.* *;
+    public void onPackageReady(...);
+    public void onSystemServerStarting(...);
 }
 
 # Kotlin
@@ -31,7 +23,15 @@
     public static int d(...);
 }
 
+# Strip coroutine debug probes
+-assumenosideeffects class kotlinx.coroutines.DebugKt {
+    public static ** getAGENT_INSTALLED();
+    public static ** getDEBUG();
+    public static ** getCHECK_RECOVERY_MODE();
+    public static ** getCHECK_RECOVERY_MODE_EXCEPTION();
+}
+-checkdiscard class kotlinx.coroutines.debug.**
+
 # Obfuscation
 -repackageclasses
 -allowaccessmodification
-

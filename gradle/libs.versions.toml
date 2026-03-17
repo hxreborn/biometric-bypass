@@ -1,16 +1,16 @@
 [versions]
-agp = "8.11.0"
-kotlin = "2.1.21"
+agp = "9.1.0"
+kotlin = "2.3.10"
 ktlint = "14.0.1"
-xposed = "100"
-xposed-service = "100-1.0.0"
+xposed = "101.0.0"
+xposed-service = "101.0.0"
+coroutines = "1.10.2"
 
 [plugins]
 agp-app = { id = "com.android.application", version.ref = "agp" }
-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 [libraries]
 libxposed-api = { group = "io.github.libxposed", name = "api", version.ref = "xposed" }
 libxposed-service = { group = "io.github.libxposed", name = "service", version.ref = "xposed-service" }
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.8.1" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
