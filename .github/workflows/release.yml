@@ -55,7 +55,7 @@ jobs:
           excludeScopes: release
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           body: ${{ steps.changelog.outputs.changes || format('Release {0}', github.ref_name) }}
           files: app/build/outputs/apk/release/app-release.apk
