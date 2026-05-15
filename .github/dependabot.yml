@@ -1,0 +1,33 @@
+version: 2
+
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+    groups:
+      compose:
+        patterns:
+          - "androidx.compose*"
+          - "androidx.activity:activity-compose"
+        update-types:
+          - "minor"
+          - "patch"
+      lifecycle:
+        patterns:
+          - "androidx.lifecycle*"
+      libxposed:
+        patterns:
+          - "io.github.libxposed*"
+      libsu:
+        patterns:
+          - "com.github.topjohnwu.libsu*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
