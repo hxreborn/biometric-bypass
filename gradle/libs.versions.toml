@@ -4,7 +4,7 @@ kotlin = "2.3.10"
 ktlint = "14.0.1"
 xposed = "101.0.0"
 xposed-service = "101.0.0"
-coroutines = "1.10.2"
+coroutines = "1.11.0"
 
 [plugins]
 agp-app = { id = "com.android.application", version.ref = "agp" }
