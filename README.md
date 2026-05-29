@@ -18,15 +18,13 @@ Streamlines face unlock by skipping biometric confirmation in System UI (Android
 
 This Xposed module streamlines face unlock by skipping the confirmation step enforced after biometric authentication. The bypass applies system-wide, so it works across all apps, including banking or security-sensitive ones.
 
-Android introduced the [`setConfirmationRequired(false)`](https://developer.android.com/identity/sign-in/biometric-auth#no-explicit-user-action) flag in Android 10 to support passive authentication flows (e.g. face unlock without requiring a tap). Most apps don't disable confirmation explicitly, so Android defaults to requiring a manual tap, turning face unlock into a two-step chore.
-
-This module ensures the confirmation step is skipped across all biometric flows, regardless of app implementation.
+By default, even after your face is recognized, Android makes you tap to confirm before it lets you through, turning face unlock into a two-step chore. This module removes that step across all biometric flows, regardless of how each app is built.
 
 ## How it Works
 
-Android 10 (API 29) added support for passive biometric flows via the `setConfirmationRequired(false)` flag in the BiometricPrompt API. This lets apps skip the "tap to confirm" step after face unlock, but only if:
+Android 10 (API 29) added support for passive biometric flows via the [`setConfirmationRequired(false)`](https://developer.android.com/identity/sign-in/biometric-auth#no-explicit-user-action) flag in the BiometricPrompt API. This lets apps skip the "tap to confirm" step after face unlock, but only if:
 
-- The app explicitly sets `setConfirmationRequired(false)`
+- The app explicitly sets the flag to `false`
 - The biometric method is classified as Class 3 (strong) (e.g. secure face unlock on Pixel 8+)
 
 Most apps don't set this flag, and even when they do, some components still enforce the confirmation dialog.

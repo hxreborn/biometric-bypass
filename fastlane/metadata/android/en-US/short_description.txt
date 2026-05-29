@@ -1,1 +1,1 @@
-Xposed module to fast-forward face unlock
+Xposed module that skips the confirm step after face unlock

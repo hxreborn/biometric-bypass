@@ -1,1 +1,11 @@
-<p>This LSPosed module streamlines face unlock by skipping the confirmation step enforced after biometric authentication. It applies the bypass system-wide — so it works across <strong>all apps</strong>, including banking or security-sensitive ones.</p><p>Android introduced the <a href="https://developer.android.com/identity/sign-in/biometric-auth#no-explicit-user-action"><code>setConfirmationRequired(false)</code></a> flag in Android 10 to support passive authentication flows (e.g., face unlock without requiring a tap). Since most apps don't disable confirmation explicitly, Android defaults to requiring a manual tap, turning face unlock into a two-step chore.</p><p>This module ensures the confirmation step is skipped across all biometric flows, regardless of app implementation.</p>
+<p>Biometric Bypass is an Xposed module that makes face unlock feel instant by skipping the confirmation step Android enforces after biometric authentication.</p>
+<p>Even after your face is recognized, Android often shows a "tap to confirm" dialog before letting you through. This module removes that dialog system-wide, so a successful scan unlocks straight away instead of waiting for a second tap.</p>
+<p>It works by hooking into System UI, so the bypass applies everywhere, including banking and security-sensitive apps that would normally force the extra step.</p>
+<p><b>Requirements</b></p>
+<ul>
+<li>Android 10 (API 29) or higher</li>
+<li>An Xposed framework with libxposed API 101 support</li>
+<li>An AOSP-based or close-to-stock ROM (OEM skins like MIUI or One UI are untested and likely unsupported)</li>
+</ul>
+<p><b>A note on security</b></p>
+<p>Removing the confirmation step trades a little security for speed. With it enabled, anything that satisfies the biometric sensor, including a spoof or your own face while you are asleep, will unlock without the extra tap. Use it where that tradeoff makes sense for you.</p>
