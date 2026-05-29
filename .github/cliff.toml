@@ -19,10 +19,6 @@ https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}
   {% if commit.breaking %} [**breaking**]{% endif %}\
   {% if commit.remote.username %} by @{{ commit.remote.username }}\
   {%- if commit.remote.pr_number %} in [#{{ commit.remote.pr_number }}]({{ self::remote_url() }}/pull/{{ commit.remote.pr_number }}){% endif %}{% endif %}
-{%- if commit.body %}
-
-{{ commit.body | indent(prefix="  ", first=true, blank=true) }}
-{%- endif %}
 {%- for footer in commit.footers %}
 {%- if footer.token != "Signed-off-by" and footer.token != "Co-authored-by" %}
 
@@ -71,7 +67,7 @@ commit_parsers = [
   { body = ".*[Ss]ecurity", group = "<!-- 03 -->Security" },
   { message = "^refactor", group = "<!-- 04 -->Refactor" },
   { message = "^[Rr]evert", group = "<!-- 05 -->Reverts" },
-  { message = '^(build|chore)\(deps(-dev)?\)', group = "<!-- 06 -->Dependencies" },
+  { message = '^(build|chore)\(deps(-dev)?\)', skip = true },
   { message = "^doc", group = "<!-- 07 -->Documentation" },
   { message = "^style", group = "<!-- 08 -->Styling" },
   { message = "^build", group = "<!-- 09 -->Build" },
