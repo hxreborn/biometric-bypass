@@ -2,14 +2,20 @@ package eu.rafareborn.biometricbypass
 
 import android.annotation.SuppressLint
 import android.util.Log
-import eu.rafareborn.biometricbypass.hooker.BiometricBypassHooker
+import eu.rafareborn.biometricbypass.hook.BiometricBypassHook
 import io.github.libxposed.api.XposedModule
 import io.github.libxposed.api.XposedModuleInterface.ModuleLoadedParam
 import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam
 
+internal const val TAG = "BiometricBypass"
+private const val TARGET_PACKAGE = "com.android.systemui"
+
+@PublishedApi internal lateinit var module: BiometricBypassModule
+
 class BiometricBypassModule : XposedModule() {
     override fun onModuleLoaded(param: ModuleLoadedParam) {
-        log(Log.INFO, TAG, "BiometricBypass v${BuildConfig.VERSION_NAME} loaded")
+        module = this
+        log(Log.INFO, TAG, "loaded version=${BuildConfig.VERSION_NAME}")
     }
 
     @SuppressLint("PrivateApi")
@@ -17,16 +23,11 @@ class BiometricBypassModule : XposedModule() {
         if (param.packageName != TARGET_PACKAGE || !param.isFirstPackage) return
 
         try {
-            BiometricBypassHooker.hook(this, param.classLoader)
+            BiometricBypassHook.hook(this, param.classLoader)
         } catch (e: ReflectiveOperationException) {
-            log(Log.ERROR, TAG, "Error: ${e::class.simpleName} - ${e.message}")
+            log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE err=${e::class.simpleName} msg=${e.message}")
         } catch (e: Exception) {
-            log(Log.ERROR, TAG, "Unexpected error: ${e.message}")
+            log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE err=${e::class.simpleName} msg=${e.message}")
         }
-    }
-
-    companion object {
-        const val TAG = "BiometricBypass"
-        private const val TARGET_PACKAGE = "com.android.systemui"
     }
 }

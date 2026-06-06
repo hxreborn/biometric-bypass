@@ -1,35 +1,33 @@
-package eu.rafareborn.biometricbypass.hooker
+package eu.rafareborn.biometricbypass.hook
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import eu.rafareborn.biometricbypass.BiometricBypassModule.Companion.TAG
+import eu.rafareborn.biometricbypass.TAG
+import eu.rafareborn.biometricbypass.module
 import io.github.libxposed.api.XposedModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-object BiometricBypassHooker {
+object BiometricBypassHook {
     private const val TARGET_CLASS = "com.android.systemui.biometrics.AuthContainerView"
     private const val TARGET_METHOD = "onDialogAnimatedIn"
     private const val BUTTON_CONFIRM_ID = "button_confirm"
     private const val MAX_RETRIES = 3
     private const val INITIAL_DELAY_MS = 100L
 
-    private lateinit var module: XposedModule
-
     @SuppressLint("PrivateApi")
     fun hook(
-        module: XposedModule,
+        xposed: XposedModule,
         classLoader: ClassLoader,
     ) {
-        this.module = module
         val targetClass = classLoader.loadClass(TARGET_CLASS)
         val targetMethod = targetClass.getDeclaredMethod(TARGET_METHOD)
 
-        module.hook(targetMethod).intercept { chain ->
+        xposed.hook(targetMethod).intercept { chain ->
             chain.proceed()
 
             val authContainerView = chain.thisObject as? View ?: return@intercept null
@@ -45,7 +43,7 @@ object BiometricBypassHooker {
             }
         }
 
-        module.log(Log.INFO, TAG, "Hooked $TARGET_METHOD in $TARGET_CLASS")
+        xposed.log(Log.INFO, TAG, "Hooked $TARGET_METHOD in $TARGET_CLASS")
     }
 
     private fun getOpPackageName(authContainerView: View): String {
