@@ -68,10 +68,10 @@ commit_parsers = [
   { message = "^refactor", group = "<!-- 04 -->Refactor" },
   { message = "^[Rr]evert", group = "<!-- 05 -->Reverts" },
   { message = '^(build|chore)\(deps(-dev)?\)', skip = true },
-  { message = "^doc", group = "<!-- 07 -->Documentation" },
-  { message = "^style", group = "<!-- 08 -->Styling" },
+  { message = "^doc", skip = true },
+  { message = "^style", skip = true },
   { message = "^build", group = "<!-- 09 -->Build" },
-  { message = "^ci", group = "<!-- 10 -->CI" },
+  { message = "^ci", skip = true },
   { message = "^test", group = "<!-- 11 -->Tests" },
   # Mute release/changelog noise only
   { message = '^chore(\(release\))?:\s*(prepare|bump|align|v?\d+\.\d+)', skip = true },
