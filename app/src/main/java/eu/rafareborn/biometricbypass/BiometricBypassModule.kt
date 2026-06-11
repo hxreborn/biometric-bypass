@@ -1,6 +1,5 @@
 package eu.rafareborn.biometricbypass
 
-import android.annotation.SuppressLint
 import android.util.Log
 import eu.rafareborn.biometricbypass.hook.BiometricBypassHook
 import io.github.libxposed.api.XposedModule
@@ -13,14 +12,17 @@ private const val TARGET_PACKAGE = "com.android.systemui"
 @PublishedApi internal lateinit var module: BiometricBypassModule
 
 class BiometricBypassModule : XposedModule() {
+    private lateinit var processName: String
+
     override fun onModuleLoaded(param: ModuleLoadedParam) {
         module = this
-        log(Log.INFO, TAG, "loaded version=${BuildConfig.VERSION_NAME}")
+        processName = param.processName
+        log(Log.INFO, TAG, "loaded version=${BuildConfig.VERSION_NAME} proc=$processName")
     }
 
-    @SuppressLint("PrivateApi")
     override fun onPackageReady(param: PackageReadyParam) {
-        if (param.packageName != TARGET_PACKAGE || !param.isFirstPackage) return
+        // only the main process hosts the auth dialog
+        if (processName != TARGET_PACKAGE || !param.isFirstPackage) return
 
         try {
             BiometricBypassHook.hook(param.classLoader)
