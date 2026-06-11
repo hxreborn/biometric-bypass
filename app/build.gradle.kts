@@ -94,10 +94,8 @@ android {
                     "META-INF/LGPL2.1",
                     "META-INF/*.kotlin_module",
                     "META-INF/INDEX.LIST",
-                    "DebugProbesKt.bin",
                     "kotlin-tooling-metadata.json",
                     "kotlin/**",
-                    "META-INF/kotlinx_coroutines_*.version",
                     "META-INF/services/*",
                     "META-INF/com/android/build/gradle/*",
                     "META-INF/version-control-info.textproto",
@@ -139,7 +137,5 @@ tasks.named("check").configure {
 }
 
 dependencies {
-    implementation(libs.libxposed.service)
     compileOnly(libs.libxposed.api)
-    implementation(libs.kotlinx.coroutines)
 }
