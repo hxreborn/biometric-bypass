@@ -23,7 +23,7 @@ class BiometricBypassModule : XposedModule() {
         if (param.packageName != TARGET_PACKAGE || !param.isFirstPackage) return
 
         try {
-            BiometricBypassHook.hook(this, param.classLoader)
+            BiometricBypassHook.hook(param.classLoader)
         } catch (e: ReflectiveOperationException) {
             log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE err=${e::class.simpleName} msg=${e.message}")
         } catch (e: Exception) {
