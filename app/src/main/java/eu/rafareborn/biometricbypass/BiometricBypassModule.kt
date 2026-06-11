@@ -9,7 +9,8 @@ import io.github.libxposed.api.XposedModuleInterface.PackageReadyParam
 internal const val TAG = "BiometricBypass"
 private const val TARGET_PACKAGE = "com.android.systemui"
 
-@PublishedApi internal lateinit var module: BiometricBypassModule
+@PublishedApi
+internal lateinit var module: BiometricBypassModule
 
 class BiometricBypassModule : XposedModule() {
     private lateinit var processName: String
@@ -26,10 +27,8 @@ class BiometricBypassModule : XposedModule() {
 
         try {
             BiometricBypassHook.hook(param.classLoader)
-        } catch (e: ReflectiveOperationException) {
-            log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE err=${e::class.simpleName} msg=${e.message}")
         } catch (e: Exception) {
-            log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE err=${e::class.simpleName} msg=${e.message}")
+            log(Log.ERROR, TAG, "hook failed pkg=$TARGET_PACKAGE", e)
         }
     }
 }
