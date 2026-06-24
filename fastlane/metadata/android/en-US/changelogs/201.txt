@@ -1,0 +1,5 @@
+Click confirm on the first frame the dialog is shown
+Run retries on the view handler instead of coroutines to avoid misses in some scenarios
+Skip non-main SystemUI processes
+Cache AuthContainerView reflection at hook setup
+Drop unused dependencies
