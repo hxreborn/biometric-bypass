@@ -60,6 +60,8 @@ commit_preprocessors = [
   { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
 ]
 commit_parsers = [
+  # Mute changelog/cliff tooling commits regardless of type
+  { message = '^\w+\((cliff|changelog)\)', skip = true },
   { message = "^feat", group = "<!-- 00 -->Features" },
   { message = "^[fF]ix", group = "<!-- 01 -->Bug Fixes" },
   { message = "^perf", group = "<!-- 02 -->Performance Improvements" },
@@ -76,7 +78,6 @@ commit_parsers = [
   # Mute release/changelog noise only
   { message = '^chore(\(release\))?:\s*(prepare|bump|align|v?\d+\.\d+)', skip = true },
   { message = '^release:\s*(bump|prepare|v?\d+\.\d+)', skip = true },
-  { message = '^chore\(changelog\)', skip = true },
   # Catch-all
   { message = ".*", group = "<!-- 99 -->Miscellaneous" },
 ]
