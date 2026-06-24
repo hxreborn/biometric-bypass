@@ -14,7 +14,7 @@ object BiometricBypassHook {
     private const val TARGET_METHOD = "onDialogAnimatedIn"
     private const val BUTTON_CONFIRM_ID = "button_confirm"
 
-    private const val MAX_WAIT_MS = 500L
+    private const val MAX_WAIT_MS = 1_500L
 
     private var configField: Field? = null
     private var opPackageNameField: Field? = null
@@ -103,8 +103,9 @@ object BiometricBypassHook {
             if (clickConfirm(parentView, buttonId, opPackageName, startUptimeMs)) {
                 return@postOnAnimation
             }
-            if (SystemClock.uptimeMillis() - startUptimeMs >= MAX_WAIT_MS) {
-                module.log(Log.WARN, TAG, "button not found pkg=$opPackageName waitMs=$MAX_WAIT_MS")
+            val elapsedMs = SystemClock.uptimeMillis() - startUptimeMs
+            if (elapsedMs >= MAX_WAIT_MS) {
+                module.log(Log.WARN, TAG, "button not found pkg=$opPackageName waitMs=$elapsedMs")
                 return@postOnAnimation
             }
             retryUntilShown(parentView, buttonId, opPackageName, startUptimeMs)
