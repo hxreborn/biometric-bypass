@@ -44,6 +44,18 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
 
+      - name: Read and verify version
+        id: version
+        run: |
+          NAME=$(grep -oP 'versionName\s*=\s*"\K[^"]+' app/build.gradle.kts)
+          CODE=$(grep -oP 'versionCode\s*=\s*\K[0-9]+' app/build.gradle.kts)
+          if [[ "v$NAME" != "${{ github.ref_name }}" ]]; then
+            echo "::error::versionName $NAME does not match tag ${{ github.ref_name }}"
+            exit 1
+          fi
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+
       - name: Generate Changelog
         id: changelog
         continue-on-error: false
@@ -61,6 +73,18 @@ jobs:
           files: app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Mirror to Xposed-Modules-Repo
+        uses: softprops/action-gh-release@v3
+        with:
+          repository: Xposed-Modules-Repo/eu.rafareborn.biometricbypass
+          token: ${{ secrets.XPOSED_REPO_PAT }}
+          tag_name: ${{ steps.version.outputs.code }}-${{ steps.version.outputs.name }}
+          name: v${{ steps.version.outputs.name }}
+          body: ${{ steps.changelog.outputs.changes || format('Release {0}', github.ref_name) }}
+          files: app/build/outputs/apk/release/app-release.apk
+          fail_on_unmatched_files: true
+          make_latest: true
 
       - name: Clean up keystore
         if: always()
