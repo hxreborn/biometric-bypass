@@ -1,13 +1,22 @@
-# Biometric Bypass Module
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/biometric_banner_dark.png">
+    <img src=".github/assets/biometric_banner_light.png" alt="Biometric Bypass">
+  </picture>
+</h1>
 
-Streamlines face unlock by skipping biometric confirmation in System UI (Android 10+)
+<p align="center">
+  Streamlines face unlock by skipping biometric confirmation in System UI (Android 10+)
+</p>
 
-![Android 10+](https://img.shields.io/badge/Android-10%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white)
-![libxposed API 101](https://img.shields.io/badge/libxposed-API_101-ff69b4?style=for-the-badge)
-[![Release](https://img.shields.io/github/v/release/hxreborn/biometric-bypass?style=for-the-badge&logo=github)](https://github.com/hxreborn/biometric-bypass/releases/latest)
-[![Build](https://img.shields.io/github/actions/workflow/status/hxreborn/biometric-bypass/android.yml?label=build&style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/hxreborn/biometric-bypass/actions/workflows/android.yml)
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-10%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android 10+" />
+  <img src="https://img.shields.io/badge/libxposed-API_101-ff69b4?style=for-the-badge" alt="libxposed API 101" />
+  <a href="https://github.com/hxreborn/biometric-bypass/releases/latest"><img src="https://img.shields.io/github/v/release/hxreborn/biometric-bypass?style=for-the-badge&logo=github" alt="Release" /></a>
+  <a href="https://github.com/hxreborn/biometric-bypass/actions/workflows/android.yml"><img src="https://img.shields.io/github/actions/workflow/status/hxreborn/biometric-bypass/android.yml?label=build&style=for-the-badge&logo=githubactions&logoColor=white" alt="Build" /></a>
+</p>
 
-<p>
+<p align="center">
   <a href="https://f-droid.org/packages/eu.rafareborn.biometricbypass"><img src=".github/assets/badge_fdroid.png" height="60" alt="Get it on F-Droid" /></a>
   <a href="https://apt.izzysoft.de/packages/eu.rafareborn.biometricbypass"><img src=".github/assets/badge_izzyondroid.png" height="60" alt="Get it on IzzyOnDroid" /></a>
   <a href="../../releases"><img src=".github/assets/badge_github.png" height="60" alt="Get it on GitHub" /></a>
