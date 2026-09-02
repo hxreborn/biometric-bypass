@@ -8,10 +8,17 @@ import android.widget.Button
 import eu.rafareborn.biometricbypass.TAG
 import eu.rafareborn.biometricbypass.module
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 object BiometricBypassHook {
-    private const val TARGET_CLASS = "com.android.systemui.biometrics.AuthContainerView"
+    private val TARGET_CLASSES =
+        listOf(
+            "com.android.systemui.biometrics.prompt.ui.AuthContainerView",
+            "com.android.systemui.biometrics.AuthContainerView",
+        )
     private const val TARGET_METHOD = "onDialogAnimatedIn"
+    private const val CONFIG_FIELD = "mConfig"
+    private const val OP_PACKAGE_FIELD = "mOpPackageName"
     private const val BUTTON_CONFIRM_ID = "button_confirm"
 
     private const val MAX_WAIT_MS = 1_500L
@@ -23,22 +30,22 @@ object BiometricBypassHook {
     private var confirmButtonId: Int = 0
 
     fun hook(classLoader: ClassLoader) {
-        val targetClass = classLoader.loadClass(TARGET_CLASS)
-        val targetMethod = targetClass.getDeclaredMethod(TARGET_METHOD)
+        val targetClass =
+            TARGET_CLASSES.firstNotNullOfOrNull { name ->
+                runCatching { classLoader.loadClass(name) }.getOrNull()
+            } ?: throw ClassNotFoundException(
+                "AuthContainerView not on any known path $TARGET_CLASSES",
+            )
 
-        configField =
-            runCatching {
-                targetClass.getDeclaredField("mConfig").apply { isAccessible = true }
-            }.onFailure {
-                module.log(Log.WARN, TAG, "reflect miss field=mConfig", it)
-            }.getOrNull()
+        val targetMethod =
+            targetClass.zeroArgMethodByBaseName(TARGET_METHOD)
+                ?: throw NoSuchMethodException("no $TARGET_METHOD variant on ${targetClass.name}")
 
-        opPackageNameField =
-            runCatching {
-                configField?.type?.getDeclaredField("mOpPackageName")?.apply { isAccessible = true }
-            }.onFailure {
-                module.log(Log.WARN, TAG, "reflect miss field=mOpPackageName", it)
-            }.getOrNull()
+        configField = targetClass.fieldByBaseName(CONFIG_FIELD)
+        opPackageNameField = configField?.type?.fieldByBaseName(OP_PACKAGE_FIELD)
+        if (opPackageNameField == null) {
+            module.log(Log.WARN, TAG, "op package field unresolved pkg=unknown in logs")
+        }
 
         module.hook(targetMethod).intercept { chain ->
             chain.proceed()
@@ -70,7 +77,20 @@ object BiometricBypassHook {
             null
         }
 
-        module.log(Log.INFO, TAG, "hooked confirm method=$TARGET_METHOD class=$TARGET_CLASS")
+        module.log(Log.INFO, TAG, "hooked confirm on ${targetClass.name}#${targetMethod.name}")
+    }
+
+    private fun Class<*>.zeroArgMethodByBaseName(base: String): Method? {
+        val zeroArg = declaredMethods.filter { it.parameterCount == 0 }
+        return zeroArg.firstOrNull { it.name == base }
+            ?: zeroArg.firstOrNull { it.name.startsWith("$base\$") }
+    }
+
+    private fun Class<*>.fieldByBaseName(base: String): Field? {
+        val field =
+            declaredFields.firstOrNull { it.name == base }
+                ?: declaredFields.firstOrNull { it.name.startsWith("$base\$") }
+        return field?.apply { isAccessible = true }
     }
 
     private fun readOpPackageName(authContainerView: View): String =
